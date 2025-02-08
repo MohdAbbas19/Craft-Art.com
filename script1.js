@@ -101,7 +101,7 @@ function sendWhatsAppMessage() {
     let totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     let message = `🛒 *New Order Details:*%0A%0A${cartDetails}%0A%0A💰 *Total Amount:* ₹${totalAmount}%0A%0A📌 *Please confirm the order.*`;
-    let phoneNumber = "9897738020";  // Replace with the business owner's WhatsApp number
+    let phoneNumber = "7300556925";  // Replace with the business owner's WhatsApp number
 
     let whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
     window.open(whatsappURL, "_blank");
