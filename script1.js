@@ -91,6 +91,23 @@ function clearCart() {
     alert("Thank you for shopping! Your cart is now empty.");
 }
 
+function sendWhatsAppMessage() {
+    if (cart.length === 0) {
+        alert("Cart is empty!");
+        return;
+    }
+
+    let cartDetails = cart.map(item => `🛍 *${item.product}* - ₹${item.price} x ${item.quantity}`).join("%0A");
+    let totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    let message = `🛒 *New Order Details:*%0A%0A${cartDetails}%0A%0A💰 *Total Amount:* ₹${totalAmount}%0A%0A📌 *Please confirm the order.*`;
+    let phoneNumber = "YOUR_PHONE_NUMBER";  // Replace with the business owner's WhatsApp number
+
+    let whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+    window.open(whatsappURL, "_blank");
+}
+
+
 function scrollInsta(amount) {
     document.querySelector('.insta-feed').scrollBy({
         left: amount,
