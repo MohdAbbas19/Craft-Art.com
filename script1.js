@@ -103,7 +103,7 @@ function sendToWhatsApp() {
 
     let message = `*New Order Received!*\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n🏠 *Address:* ${address}\n\n🛒 *Cart Items:*\n${cartText}\n\n💰 *Total Amount:* ₹${totalAmount.toFixed(2)}\n\n🚀 *Please confirm the order!*`;
 
-    let ownerNumber = "91XXXXXXXXXX"; // Replace with actual WhatsApp number
+    let ownerNumber = "917300556925"; // Replace with actual WhatsApp number
     let whatsappUrl = `https://api.whatsapp.com/send?phone=${ownerNumber}&text=${encodeURIComponent(message)}`;
 
     window.open(whatsappUrl, "_blank");
