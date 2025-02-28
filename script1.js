@@ -91,21 +91,50 @@ function clearCart() {
     alert("Thank you for shopping! Your cart is now empty.");
 }
 
-function sendWhatsAppMessage() {
-    if (cart.length === 0) {
-        alert("Cart is empty!");
+// Show the order form when "Shop" is clicked
+document.getElementById("shopButton").addEventListener("click", function() {
+    document.getElementById("order-form").style.display = "block";
+});
+
+// Hide the form when "Cancel" is clicked
+function closeForm() {
+    document.getElementById("order-form").style.display = "none";
+}
+
+// Send Cart & Form Data via WhatsApp
+function sendToWhatsApp() {
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let address = document.getElementById("address").value;
+
+    if (name === "" || phone === "" || address === "") {
+        alert("⚠️ Please fill all the details.");
         return;
     }
+ // ✅ Fetch updated cart data
+ let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
 
-    let cartDetails = cart.map(item => `🛍 *${item.product}* - ₹${item.price} x ${item.quantity}`).join("%0A");
-    let totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+ if (!cartItems || cartItems.length === 0) {
+     alert("⚠️ Your cart is empty!");
+     return;
+ }
 
-    let message = `🛒 *New Order Details:*%0A%0A${cartDetails}%0A%0A💰 *Total Amount:* ₹${totalAmount}%0A%0A📌 *Please confirm the order.*`;
-    let phoneNumber = "7300556925";  // Replace with the business owner's WhatsApp number
+ console.log("Cart Data:", cartItems); // ✅ Debugging line
 
-    let whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
-    window.open(whatsappURL, "_blank");
+    let cartText = cartItems.map((item, index) =>
+        `🛍️ ${index + 1}. ${item.name} x ${item.quantity} - ₹${item.price}`
+    ).join("\n");
+
+    let totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    let message = `*New Order Received!*\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n🏠 *Address:* ${address}\n\n🛒 *Cart Items:*\n${cartText}\n\n💰 *Total Amount:* ₹${totalAmount}\n\n🚀 *Please confirm the order!*`;
+
+    let ownerNumber = "91XXXXXXXXXX";  // Replace with your WhatsApp number
+    let whatsappUrl = `https://api.whatsapp.com/send?phone=${ownerNumber}&text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappUrl, "_blank");
 }
+
 
 
 function scrollInsta(amount) {
@@ -115,5 +144,62 @@ function scrollInsta(amount) {
     });
 }
 
+const productImages = {
+    wedding: [
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"] // Images for second wedding product
+    ],
+    haldi: [
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"] // Images for second party product
+    ],
+    Ramazan: [
+        ["galary/Rr1.jpg", "galary/Rr2.jpg", "galary/Rr3.jpg"],
+        ["galary/rb1.jpg", "galary/rb2.jpg", "galary/rb3.jpg"],
+        ["galary/T1.jpg", "galary/T2.jpg"],
+        ["galary/Jg1.jpg", "galary/Jb2.jpg", "galary/Jp3.jpg", "galary/Jgb4.jpg", "galary/Jblu6.jpg", "galary/Jg1.jpg"],
+        ["galary/Jbl5.jpg", "galary/Jbl5.jpg"],
+        ["galary/Rp4.jpg", "galary/R3.jpg", "galary/Rg2.jpg", "galary/Rab1.jpg", "galary/Rw6.jpg", "galary/Rblb7.jpg"] // Images for second casual product
+    ],
+    other: [
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"],
+        ["IMG-20250202-WA0014.jpg", "IMG-20250202-WA0013.jpg", "IMG-20250202-WA0012.jpg"] // Images for second formal product
+    ]
+};
+
+let currentImageIndex = {
+    wedding: [0, 0, 0, 0, 0, 0, 0, 0],
+    haldi: [0, 0, 0, 0, 0, 0, 0, 0],
+    Ramazan: [0, 0, 0, 0, 0, 0, 0, 0],
+    other: [0, 0, 0, 0, 0, 0, 0, 0]
+};
+
+function nextImage(section, productIndex) {
+    currentImageIndex[section][productIndex] = (currentImageIndex[section][productIndex] + 1) % productImages[section][productIndex].length;
+    document.getElementById(`${section}-product-img-${productIndex}`).src = productImages[section][productIndex][currentImageIndex[section][productIndex]];
+}
+
+function prevImage(section, productIndex) {
+    currentImageIndex[section][productIndex] = (currentImageIndex[section][productIndex] - 1 + productImages[section][productIndex].length) % productImages[section][productIndex].length;
+    document.getElementById(`${section}-product-img-${productIndex}`).src = productImages[section][productIndex][currentImageIndex[section][productIndex]];
+}
 
 
