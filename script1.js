@@ -53,35 +53,6 @@ function updateCart() {
     cartTotal.textContent = total.toFixed(2);
 }
 
-// Generate UPI QR Code
-function generateQRCode() {
-    const totalAmount = parseFloat(document.getElementById("cart-total").textContent);
-
-    if (isNaN(totalAmount) || totalAmount === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
-
-    // Replace 'yourupi@upi' with your actual UPI ID
-    const upiId = "abbaskhanjarvis79@okaxis"; // Example: "merchant@upi"
-    const upiName = "Craft RAW material 🌸"; // Business or individual name
-    const transactionNote = "Shopping Payment"; // Description for payment
-    const currency = "INR"; // Indian Rupees
-
-    // UPI Payment URL
-    const upiQRData = `upi://pay?pa=${upiId}&pn=${upiName}&tn=${transactionNote}&am=${totalAmount}&cu=${currency}`;
-
-    // Generate QR Code
-    const qrCodeURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiQRData)}`;
-
-    // Update QR Code Image
-    const qrImage = document.getElementById("qrcode");
-    qrImage.src = qrCodeURL;
-    qrImage.style.display = "block";
-
-    document.getElementById("qrcode-container").style.display = "block";
-}
-
 // Clear Cart after Checkout
 function clearCart() {
     cart = [];  // Reset cart array
@@ -101,39 +72,43 @@ function closeForm() {
     document.getElementById("order-form").style.display = "none";
 }
 
-// Send Cart & Form Data via WhatsApp
 function sendToWhatsApp() {
     let name = document.getElementById("name").value;
     let phone = document.getElementById("phone").value;
     let address = document.getElementById("address").value;
 
-    if (name === "" || phone === "" || address === "") {
+    if (!name || !phone || !address) {
         alert("⚠️ Please fill all the details.");
         return;
     }
- // ✅ Fetch updated cart data
- let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
 
- if (!cartItems || cartItems.length === 0) {
-     alert("⚠️ Your cart is empty!");
-     return;
- }
+    // ✅ Fetch cart items directly from the HTML list
+    let cartItemsList = document.querySelectorAll("#cart-items li");
+    if (cartItemsList.length === 0) {
+        alert("⚠️ Your cart is empty!");
+        return;
+    }
 
- console.log("Cart Data:", cartItems); // ✅ Debugging line
+    let cartText = "";
+    let totalAmount = 0;
 
-    let cartText = cartItems.map((item, index) =>
-        `🛍️ ${index + 1}. ${item.name} x ${item.quantity} - ₹${item.price}`
-    ).join("\n");
+    cartItemsList.forEach((item, index) => {
+        let productText = item.textContent.trim(); // Get text inside <li>
+        let priceMatch = productText.match(/₹(\d+(\.\d+)?)/); // Extract price using regex
+        let price = priceMatch ? parseFloat(priceMatch[1]) : 0;
 
-    let totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        cartText += `🛍️ ${index + 1}. ${productText}\n`;
+        totalAmount += price;
+    });
 
-    let message = `*New Order Received!*\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n🏠 *Address:* ${address}\n\n🛒 *Cart Items:*\n${cartText}\n\n💰 *Total Amount:* ₹${totalAmount}\n\n🚀 *Please confirm the order!*`;
+    let message = `*New Order Received!*\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n🏠 *Address:* ${address}\n\n🛒 *Cart Items:*\n${cartText}\n\n💰 *Total Amount:* ₹${totalAmount.toFixed(2)}\n\n🚀 *Please confirm the order!*`;
 
-    let ownerNumber = "91XXXXXXXXXX";  // Replace with your WhatsApp number
+    let ownerNumber = "91XXXXXXXXXX"; // Replace with actual WhatsApp number
     let whatsappUrl = `https://api.whatsapp.com/send?phone=${ownerNumber}&text=${encodeURIComponent(message)}`;
 
     window.open(whatsappUrl, "_blank");
 }
+
 
 
 
